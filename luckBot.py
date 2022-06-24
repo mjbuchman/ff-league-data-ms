@@ -12,7 +12,7 @@ WEBHOOK = os.getenv('WEBHOOK')
 
 def sendMessage(currWeek, data):
 	message = f"Here's the Luckiness Differential through Week {currWeek-1}:\n\n`" + data + "`\n*** Positive is luckier, negative is unluckier!"
-	webhook = DiscordWebhook(url=WEBHOOK+"d", content=message)
+	webhook = DiscordWebhook(url=WEBHOOK, content=message)
 	return webhook.execute()
  
 def runLuckBot(currWeek, currYear):
