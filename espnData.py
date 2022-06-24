@@ -8,7 +8,7 @@ ESPN_S2 = os.getenv('ESPN_S2')
 SWID = os.getenv('SWID')
 
 def getMatchupData(startWeek, endWeek, year):
-	matchups = []
+	matchups = {}
 	league = League(league_id=LEAGUE, year=year, espn_s2=ESPN_S2, swid=SWID)	
 	for week in range(startWeek,endWeek):
 		for matchup in league.scoreboard(week):
