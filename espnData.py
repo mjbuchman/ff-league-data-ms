@@ -14,11 +14,11 @@ def getMatchupData(startWeek, endWeek, year):
 		matchups[week] = []
 		for matchup in league.scoreboard(week):
 			matchups[week].append({	
+      		"week": week,
+      		"year": year,
       		"homeTeam": matchup.home_team.owner,
       		"homeScore": str(matchup.home_score),
       		"awayTeam": matchup.away_team.owner,
       		"awayScore": str(matchup.away_score)
         })
 	return matchups
-
-print(getMatchupData(1,2,2021))
