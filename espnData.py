@@ -8,12 +8,12 @@ ESPN_S2 = os.getenv('ESPN_S2')
 SWID = os.getenv('SWID')
 
 def getMatchupData(startWeek, endWeek, year):
-	matchups = {}
+	matchups = []
+	fullWeek = []
 	league = League(league_id=LEAGUE, year=year, espn_s2=ESPN_S2, swid=SWID)	
-	for week in range(startWeek,endWeek):
-		matchups[week] = []
+	for week in range(startWeek,endWeek+1):
 		for matchup in league.scoreboard(week):
-			matchups[week].append({	
+			fullWeek.append({	
       		"week": week,
       		"year": year,
       		"homeTeam": matchup.home_team.owner,
@@ -21,4 +21,8 @@ def getMatchupData(startWeek, endWeek, year):
       		"awayTeam": matchup.away_team.owner,
       		"awayScore": str(matchup.away_score)
         })
+		matchups.append(fullWeek)
+		fullWeek = []
 	return matchups
+
+print(getMatchupData(1,1,2021))
