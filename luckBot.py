@@ -21,7 +21,7 @@ def runLuckBot(currWeek, currYear):
 	actualWins = {}
 	expectedWins = {}
 	for team in league.teams:
-		actualWins[team.team_name] = team.wins
+		actualWins[team.team_name] = 0
 		expectedWins[team.team_name] = 0
 		
 	scores = {}
@@ -29,6 +29,12 @@ def runLuckBot(currWeek, currYear):
 		for matchup in league.scoreboard(x):
 			scores[matchup.home_team.team_name] = matchup.home_score
 			scores[matchup.away_team.team_name] = matchup.away_score
+			if (matchup.home_score > matchup.away_score): actualWins[matchup.home_team.team_name] += 1
+			elif (matchup.home_score < matchup.away_score): actualWins[matchup.away_team.team_name] += 1
+			else:
+				actualWins[matchup.home_team.team_name] += .5
+				actualWins[matchup.away_team.team_name] += .5
+    
 		sortedScores = dict(sorted(scores.items(), key = lambda x: x[1]))
 		
 		keysList = list(sortedScores)
@@ -44,3 +50,5 @@ def runLuckBot(currWeek, currYear):
 	sortedOutput = sorted(output, key=lambda x: x[3], reverse=True)
 	data = tabulate(sortedOutput, headers=['Team', 'Act.', 'Exp.', 'Luck'], tablefmt="rst", stralign="left", floatfmt=".3f")
 	return sendMessage(currWeek, data)
+
+runLuckBot(9, 2021)
