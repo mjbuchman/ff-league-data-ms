@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
 from flask_cors import CORS
 from dotenv import load_dotenv 
 import luckBot
@@ -7,6 +7,10 @@ import espnData
 app = Flask(__name__)
 CORS(app)
 load_dotenv()
+
+@app.route('/')
+def index():
+	return render_template("index.html")
     
 @app.route('/getMatchupData', methods = ['GET'])
 def getLeagueData():
