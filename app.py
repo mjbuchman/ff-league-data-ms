@@ -24,6 +24,7 @@ def runLuckBot():
 	currWeek = int(request.args.get('week'))
 	currYear = int(request.args.get('year'))
 	response = luckBot.runLuckBot(currWeek, currYear)
+	print(f'Response: {response}')
 	return jsonify({"status": response.status})
 
 if __name__ == '__main__':
