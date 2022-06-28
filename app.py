@@ -19,6 +19,11 @@ def getLeagueData():
 	year = int(request.args.get('year'))
 	return jsonify(espnData.getMatchupData(startWeek, endWeek, year))
 
+@app.route('/getDraftData', methods = ['GET'])
+def getDraftData():
+	year = int(request.args.get('year'))
+	return jsonify(espnData.getDraftData(year))
+
 @app.route('/runLuckBot', methods = ['GET'])
 def runLuckBot():
 	currWeek = int(request.args.get('week'))

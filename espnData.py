@@ -25,4 +25,16 @@ def getMatchupData(startWeek, endWeek, year):
 		fullWeek = []
 	return matchups
 
-print(getMatchupData(1,1,2021))
+def getDraftData(year):
+	draft = []
+	league = League(league_id=LEAGUE, year=year, espn_s2=ESPN_S2, swid=SWID)
+	for pick in league.draft:
+		player = league.player_info(playerId = pick.playerId)
+		gp = 0
+		for key in player.stats:
+			if(player.stats[key]["breakdown"]):
+				gp += 1
+		avgPts = round(player.total_points/gp, 2) if gp > 0 else 0
+		draftPick = {"year": year, "round": pick.round_num, "pick": pick.round_pick, "name": player.name, "team": player.proTeam, "position": player.position, "owner": pick.team.owner, "prk": player.posRank, "gp": gp, "fptsg": avgPts, "fpts": player.total_points}
+		draft.append(draftPick)
+	return draft
