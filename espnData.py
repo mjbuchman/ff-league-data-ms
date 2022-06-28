@@ -35,7 +35,7 @@ def getDraftData(year):
 			if(player.stats[key]["breakdown"]):
 				gp += 1
 		avgPts = round(player.total_points/gp, 2) if gp > 0 else 0
-		prk = 200 if pick.posRank == 0 else pick.posRank
+		prk = 200 if player.posRank == 0 else player.posRank
 		draftPick = {"year": year, "round": pick.round_num, "pick": pick.round_pick, "name": player.name, "team": player.proTeam, "position": player.position, "owner": pick.team.owner, "prk": prk, "gp": gp, "fptsg": avgPts, "fpts": player.total_points}
 		draft.append(draftPick)
 	return draft
