@@ -50,5 +50,3 @@ def runLuckBot(currWeek, currYear):
 	sortedOutput = sorted(output, key=lambda x: x[3], reverse=True)
 	data = tabulate(sortedOutput, headers=['Team', 'Act.', 'Exp.', 'Luck'], tablefmt="rst", stralign="left", floatfmt=".3f")
 	return sendMessage(currWeek, data)
-
-runLuckBot(9, 2021)
