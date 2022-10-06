@@ -11,7 +11,7 @@ SWID = os.getenv('SWID')
 WEBHOOK = os.getenv('WEBHOOK')
 
 def sendMessage(currWeek, data):
-	message = f"Here's the Luckiness Differential through Week {currWeek-1}:\n\n`" + data + "`\n*** Positive is luckier, negative is unluckier!"
+	message = f"Here's the Luckiness Factor through Week {currWeek-1}:\n`" + data + "`"
 	webhook = DiscordWebhook(url=WEBHOOK, content=message)
 	return webhook.execute()
  
@@ -21,19 +21,19 @@ def runLuckBot(currWeek, currYear):
 	actualWins = {}
 	expectedWins = {}
 	for team in league.teams:
-		actualWins[team.team_name] = 0
-		expectedWins[team.team_name] = 0
+		actualWins[team.owner] = 0
+		expectedWins[team.owner] = 0
 		
 	scores = {}
 	for x in range(1,currWeek):
 		for matchup in league.scoreboard(x):
-			scores[matchup.home_team.team_name] = matchup.home_score
-			scores[matchup.away_team.team_name] = matchup.away_score
-			if (matchup.home_score > matchup.away_score): actualWins[matchup.home_team.team_name] += 1
-			elif (matchup.home_score < matchup.away_score): actualWins[matchup.away_team.team_name] += 1
+			scores[matchup.home_team.owner] = matchup.home_score
+			scores[matchup.away_team.owner] = matchup.away_score
+			if (matchup.home_score > matchup.away_score): actualWins[matchup.home_team.owner] += 1
+			elif (matchup.home_score < matchup.away_score): actualWins[matchup.away_team.owner] += 1
 			else:
-				actualWins[matchup.home_team.team_name] += .5
-				actualWins[matchup.away_team.team_name] += .5
+				actualWins[matchup.home_team.owner] += .5
+				actualWins[matchup.away_team.owner] += .5
     
 		sortedScores = dict(sorted(scores.items(), key = lambda x: x[1]))
 		
@@ -45,7 +45,12 @@ def runLuckBot(currWeek, currYear):
 
 	output = []
 	for team in league.teams:
-		output.append([team.team_name,actualWins[team.team_name]/((currWeek-1)),expectedWins[team.team_name]/((currWeek-1)*9),actualWins[team.team_name]/((currWeek-1)) - expectedWins[team.team_name]/((currWeek-1)*9)])
+		output.append([
+    	team.owner.split(' ', 1)[0],
+     	actualWins[team.owner],
+      expectedWins[team.owner]/9,
+      actualWins[team.owner] - expectedWins[team.owner]/9
+    ])
 
 	sortedOutput = sorted(output, key=lambda x: x[3], reverse=True)
 	data = tabulate(sortedOutput, headers=['Team', 'Act.', 'Exp.', 'Luck'], tablefmt="rst", stralign="left", floatfmt=".3f")
