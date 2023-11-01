@@ -9,6 +9,18 @@ LEAGUE = os.getenv('LEAGUE_ID')
 ESPN_S2 = os.getenv('ESPN_S2')
 SWID = os.getenv('SWID')
 WEBHOOK = os.getenv('WEBHOOK')
+UserMap = {
+	"{AEB27B68-FF30-4525-B27B-68FF3065252B}" : "Connor DeYoung",
+	"{9CDAE063-F1E8-4260-B2D9-F457E5214403}" : "Michael Buchman",
+	"{EE721424-BE30-499F-A4FA-80556D6673A9}" : "Tyler Brown",
+	"{CAE1C5DD-16B2-4B40-A1C5-DD16B29B408B}" : "Joe Perry",
+	"{755075D4-4A7D-45E4-BDA3-36711D6B7E6A}" : "Brenden Zarrinnam",
+	"{497BB1CE-AAE3-473A-BBB1-CEAAE3573AA9}" : "Nick Eufrasio",
+	"{CE187872-D2A1-4B1E-B956-C753D364EA2C}" : "Ryan Rasmussen",
+	"{FB25C07D-400B-4EAD-9BDD-098A21B55A92}" : "Grant Dakovich",
+	"{69AE30CE-F82D-4957-B3B8-18C2993951D8}" : "James Earley",
+	"{C9C2DA15-183C-42F6-B8B4-A6D7D24FC592}" : "Jonathan Setzke"
+}
 
 def sendMessage(currWeek, data):
 	message = f"Here's the Luckiness Factor through Week {currWeek-1}:\n`" + data + "`"
@@ -21,19 +33,22 @@ def runLuckBot(currWeek, currYear):
 	actualWins = {}
 	expectedWins = {}
 	for team in league.teams:
-		actualWins[team.owner] = 0
-		expectedWins[team.owner] = 0
+		currOwner = UserMap[team.owners[0]]
+		actualWins[currOwner] = 0
+		expectedWins[currOwner] = 0
 		
 	scores = {}
 	for x in range(1,currWeek):
 		for matchup in league.scoreboard(x):
-			scores[matchup.home_team.owner] = matchup.home_score
-			scores[matchup.away_team.owner] = matchup.away_score
-			if (matchup.home_score > matchup.away_score): actualWins[matchup.home_team.owner] += 1
-			elif (matchup.home_score < matchup.away_score): actualWins[matchup.away_team.owner] += 1
+			homeTeam = UserMap[matchup.home_team.owners[0]]
+			awayTeam = UserMap[matchup.away_team.owners[0]]
+			scores[homeTeam] = matchup.home_score
+			scores[awayTeam] = matchup.away_score
+			if (matchup.home_score > matchup.away_score): actualWins[homeTeam] += 1
+			elif (matchup.home_score < matchup.away_score): actualWins[awayTeam] += 1
 			else:
-				actualWins[matchup.home_team.owner] += .5
-				actualWins[matchup.away_team.owner] += .5
+				actualWins[homeTeam] += .5
+				actualWins[awayTeam] += .5
     
 		sortedScores = dict(sorted(scores.items(), key = lambda x: x[1]))
 		
@@ -45,11 +60,12 @@ def runLuckBot(currWeek, currYear):
 
 	output = []
 	for team in league.teams:
+		currOwner = UserMap[team.owners[0]]
 		output.append([
-    	team.owner.split(' ', 1)[0],
-     	actualWins[team.owner],
-      expectedWins[team.owner]/9,
-      actualWins[team.owner] - expectedWins[team.owner]/9
+    	currOwner.split(' ', 1)[0],
+     	actualWins[currOwner],
+      expectedWins[currOwner]/9,
+      actualWins[currOwner] - expectedWins[currOwner]/9
     ])
 
 	sortedOutput = sorted(output, key=lambda x: x[3], reverse=True)
