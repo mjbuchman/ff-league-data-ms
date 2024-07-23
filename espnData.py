@@ -16,9 +16,9 @@ def getMatchupData(startWeek, endWeek, year):
 			fullWeek.append({	
       		"week": week,
       		"year": year,
-      		"homeTeam": matchup.home_team.owner,
+      		"homeTeam": matchup.home_team.owners[0]["firstName"] + " " + matchup.home_team.owners[0]["lastName"],
       		"homeScore": str(matchup.home_score),
-      		"awayTeam": matchup.away_team.owner,
+      		"awayTeam": matchup.away_team.owners[0]["firstName"] + " " + matchup.away_team.owners[0]["lastName"],
       		"awayScore": str(matchup.away_score)
         })
 		matchups.append(fullWeek)
@@ -36,6 +36,6 @@ def getDraftData(year):
 				gp += 1
 		avgPts = round(player.total_points/gp, 2) if gp > 0 else 0
 		prk = 200 if player.posRank == 0 else player.posRank
-		draftPick = {"year": year, "round": pick.round_num, "pick": pick.round_pick, "name": player.name, "team": player.proTeam, "position": player.position, "owner": pick.team.owners, "prk": prk, "gp": gp, "fptsg": avgPts, "fpts": player.total_points}
+		draftPick = {"year": year, "round": pick.round_num, "pick": pick.round_pick, "name": player.name, "team": player.proTeam, "position": player.position, "owner": pick.team.owners[0]["firstName"] + " " + pick.team.owners[0]["lastName"], "prk": prk, "gp": gp, "fptsg": avgPts, "fpts": player.total_points}
 		draft.append(draftPick)
 	return draft
