@@ -3,6 +3,7 @@ from flask_cors import CORS
 from dotenv import load_dotenv 
 import luckBot
 import espnData
+import previewBot
 
 app = Flask(__name__)
 CORS(app)
@@ -30,6 +31,12 @@ def runLuckBot():
 	currYear = int(request.args.get('year'))
 	response = luckBot.runLuckBot(currWeek, currYear)
 	return response.json()
+
+@app.route('/runPreviewBot', methods = ['GET'])
+def runPreviewBot():
+	currYear = int(request.args.get('year'))
+	response = previewBot.runPreviewBot(currYear)
+	return response
 
 if __name__ == '__main__':
 	app.run()
