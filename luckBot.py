@@ -8,7 +8,7 @@ load_dotenv()
 LEAGUE = os.getenv('LEAGUE_ID')
 ESPN_S2 = os.getenv('ESPN_S2')
 SWID = os.getenv('SWID')
-WEBHOOK = os.getenv('WEBHOOK')
+WEBHOOK = os.getenv('LUCKBOT_WEBHOOK')
 UserMap = {
 	"{AEB27B68-FF30-4525-B27B-68FF3065252B}" : "Connor",
 	"{9CDAE063-F1E8-4260-B2D9-F457E5214403}" : "Michael",
@@ -19,7 +19,7 @@ UserMap = {
 	"{CE187872-D2A1-4B1E-B956-C753D364EA2C}" : "Ryan",
 	"{FB25C07D-400B-4EAD-9BDD-098A21B55A92}" : "Grant",
 	"{69AE30CE-F82D-4957-B3B8-18C2993951D8}" : "James",
-	"{C9C2DA15-183C-42F6-B8B4-A6D7D24FC592}" : "Jonathan"
+	"{EE6F0E12-19E2-47CC-BB84-5422424FF929}" : "Jonathan"
 }
 
 def sendMessage(currWeek, data):
@@ -33,15 +33,16 @@ def runLuckBot(currWeek, currYear):
 	actualWins = {}
 	expectedWins = {}
 	for team in league.teams:
-		currOwner = UserMap[team.owners[0]]
+		currOwner = UserMap[team.owners[0]["id"]]
 		actualWins[currOwner] = 0
 		expectedWins[currOwner] = 0
 		
 	scores = {}
 	for x in range(1,currWeek):
 		for matchup in league.scoreboard(x):
-			homeTeam = UserMap[matchup.home_team.owners[0]]
-			awayTeam = UserMap[matchup.away_team.owners[0]]
+			print(matchup.home_team.owners[0])
+			homeTeam = UserMap[matchup.home_team.owners[0]["id"]]
+			awayTeam = UserMap[matchup.away_team.owners[0]["id"]]
 			scores[homeTeam] = matchup.home_score
 			scores[awayTeam] = matchup.away_score
 			if (matchup.home_score > matchup.away_score): actualWins[homeTeam] += 1
@@ -60,7 +61,7 @@ def runLuckBot(currWeek, currYear):
 
 	output = []
 	for team in league.teams:
-		currOwner = UserMap[team.owners[0]]
+		currOwner = UserMap[team.owners[0]["id"]]
 		output.append([
     	currOwner.split(' ', 1)[0],
      	actualWins[currOwner],

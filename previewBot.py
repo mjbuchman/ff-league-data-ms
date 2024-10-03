@@ -9,7 +9,7 @@ load_dotenv()
 LEAGUE = os.getenv('LEAGUE_ID')
 ESPN_S2 = os.getenv('ESPN_S2')
 SWID = os.getenv('SWID')
-WEBHOOK = os.getenv('WEBHOOK')
+WEBHOOK = os.getenv('MATCHUPBOT_WEBHOOK')
 UserMap = {
 	"{AEB27B68-FF30-4525-B27B-68FF3065252B}" : "Connor DeYoung",
 	"{9CDAE063-F1E8-4260-B2D9-F457E5214403}" : "Michael Buchman",
@@ -20,7 +20,7 @@ UserMap = {
 	"{CE187872-D2A1-4B1E-B956-C753D364EA2C}" : "Ryan Rasmussen",
 	"{FB25C07D-400B-4EAD-9BDD-098A21B55A92}" : "Grant Dakovich",
 	"{69AE30CE-F82D-4957-B3B8-18C2993951D8}" : "James Earley",
-	"{C9C2DA15-183C-42F6-B8B4-A6D7D24FC592}" : "Jonathan Setzke"
+	"{EE6F0E12-19E2-47CC-BB84-5422424FF929}" : "Jonathan Setzke"
 }
 
 def sendMessage(preview):
@@ -29,6 +29,7 @@ def sendMessage(preview):
 
 def getPreview(owner1, owner2):
     overview = requests.get(f"http://localhost:3000/getH2HOverview/{owner1}/{owner2}")
+    print(overview)
     overview = overview.json()
     data = [
         ["Wins", overview["o1Data"]["wins"], overview["o2Data"]["wins"]],
@@ -47,7 +48,7 @@ def runPreviewBot(currYear):
     webhook.execute()
     previews = []
     for matchup in league.scoreboard():
-        sendMessage(getPreview(UserMap[matchup.home_team.owners[0]], UserMap[matchup.away_team.owners[0]]))
+        sendMessage(getPreview(UserMap[matchup.home_team.owners[0]["id"]], UserMap[matchup.away_team.owners[0]["id"]]))
     webhook = DiscordWebhook(url=WEBHOOK, content="For more details visit the [WFFL H2H Page](http://www.wallersteinffl.com/#/h2h)")
     webhook.execute()
     return "yay"
