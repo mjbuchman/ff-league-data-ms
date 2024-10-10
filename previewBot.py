@@ -51,4 +51,4 @@ def runPreviewBot(currYear):
         sendMessage(getPreview(UserMap[matchup.home_team.owners[0]["id"]], UserMap[matchup.away_team.owners[0]["id"]]))
     webhook = DiscordWebhook(url=WEBHOOK, content="For more details visit the [WFFL H2H Page](http://www.wallersteinffl.com/#/h2h)")
     webhook.execute()
-    return {status: "success"}
+    return jsonify({"message": "Success"})
