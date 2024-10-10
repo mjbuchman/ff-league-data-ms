@@ -28,7 +28,7 @@ def sendMessage(preview):
     return webhook.execute()
 
 def getPreview(owner1, owner2):
-    overview = requests.get(f"http://localhost:3000/getH2HOverview/{owner1}/{owner2}")
+    overview = requests.get(f"http://www.wallersteinffl.com/getH2HOverview/{owner1}/{owner2}")
     print(overview)
     overview = overview.json()
     data = [
@@ -44,8 +44,8 @@ def getPreview(owner1, owner2):
 
 def runPreviewBot(currYear):
     league = League(league_id=LEAGUE, year=currYear, espn_s2=ESPN_S2, swid=SWID)
-    webhook = DiscordWebhook(url=WEBHOOK, content="Upcoming Matchup Previews:")
-    webhook.execute()
+    # webhook = DiscordWebhook(url=WEBHOOK, content="Upcoming Matchup Previews:")
+    # webhook.execute()
     previews = []
     for matchup in league.scoreboard():
         sendMessage(getPreview(UserMap[matchup.home_team.owners[0]["id"]], UserMap[matchup.away_team.owners[0]["id"]]))
