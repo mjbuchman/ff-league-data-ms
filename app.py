@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 import luckBot
 import espnData
 import previewBot
+import liveStandings
 
 app = Flask(__name__)
 CORS(app)
@@ -37,6 +38,11 @@ def runPreviewBot():
 	currYear = int(request.args.get('year'))
 	response = previewBot.runPreviewBot(currYear)
 	return response
+
+@app.route('/calculateStandings', methods = ['GET'])
+def calculateStandings():
+	response = liveStandings.calculateStandings()
+	return render_template("standings.html", teams=response)
 
 if __name__ == '__main__':
 	app.run(port=8000)

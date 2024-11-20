@@ -1,0 +1,3 @@
+{% for key, value in teams.items() %}
+<h2>{{ loop.index }}&nbsp;{{ key }}&nbsp;{{ value.wins }}-{{ 12-value.wins }}&nbsp;{{ value.pf }}</h2>
+{% endfor %}
