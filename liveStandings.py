@@ -1,6 +1,6 @@
 from espn_api.football import League
 from dotenv import load_dotenv
-import os
+import os, copy
 
 load_dotenv()
 LEAGUE = os.getenv('LEAGUE_ID')
@@ -50,7 +50,7 @@ base_standings = {
     },
 }
 def calculateStandings():
-    standings = base_standings
+    standings = copy.deepcopy(base_standings)
     result = {}
     league = League(league_id=LEAGUE, year=2024, espn_s2=ESPN_S2, swid=SWID)	
     for matchup in league.box_scores(12):
