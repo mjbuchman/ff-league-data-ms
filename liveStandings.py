@@ -7,7 +7,7 @@ LEAGUE = os.getenv('LEAGUE_ID')
 ESPN_S2 = os.getenv('ESPN_S2')
 SWID = os.getenv('SWID')
 
-standings = {
+base_standings = {
     "Grant Dakovich": {
         "wins": 6,
         "pf": 1531.38
@@ -50,6 +50,7 @@ standings = {
     },
 }
 def calculateStandings():
+    standings = base_standings
     result = {}
     league = League(league_id=LEAGUE, year=2024, espn_s2=ESPN_S2, swid=SWID)	
     for matchup in league.box_scores(12):
@@ -63,7 +64,7 @@ def calculateStandings():
             standings[homeTeam]["wins"] += 1
         elif (float(matchup.home_score) < float(matchup.away_score)):
             standings[awayTeam]["wins"] += 1
-            
+
     order = sorted(standings, key=lambda x: (standings[x]['wins'], standings[x]['pf']), reverse=True)
     
     for item in order: 
