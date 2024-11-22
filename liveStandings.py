@@ -1,4 +1,11 @@
-import espnData
+from espn_api.football import League
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+LEAGUE = os.getenv('LEAGUE_ID')
+ESPN_S2 = os.getenv('ESPN_S2')
+SWID = os.getenv('SWID')
 
 standings = {
     "Grant Dakovich": {
@@ -44,15 +51,19 @@ standings = {
 }
 def calculateStandings():
     result = {}
-    matchups = espnData.getMatchupData(12,12,2024)
-    for matchup in matchups[0]:
-        standings[matchup["homeTeam"]]["pf"] += float(matchup["homeScore"])
-        standings[matchup["awayTeam"]]["pf"] += float(matchup["awayScore"])
+    league = League(league_id=LEAGUE, year=2024, espn_s2=ESPN_S2, swid=SWID)	
+    for matchup in league.box_scores(12):
+        homeTeam = matchup.home_team.owners[0]["firstName"] + " " + matchup.home_team.owners[0]["lastName"]
+        awayTeam = matchup.away_team.owners[0]["firstName"] + " " + matchup.away_team.owners[0]["lastName"]
 
-        if (float(matchup["homeScore"]) > float(matchup["awayScore"])):
-            standings[matchup["homeTeam"]]["wins"] += 1
-        elif (float(matchup["homeScore"]) < float(matchup["awayScore"])):
-            standings[matchup["awayTeam"]]["wins"] += 1
+        standings[homeTeam]["pf"] += float(matchup.home_score)
+        standings[awayTeam]["pf"] += float(matchup.away_score)
+
+        if (float(matchup.home_score) > float(matchup.away_score)):
+            standings[homeTeam]["wins"] += 1
+        elif (float(matchup.home_score) < float(matchup.away_score)):
+            standings[awayTeam]["wins"] += 1
+            
     order = sorted(standings, key=lambda x: (standings[x]['wins'], standings[x]['pf']), reverse=True)
     
     for item in order: 
